@@ -8,7 +8,7 @@ nodes
 # SSH user, this user should allow ssh based auth without requiring a password
 ansible_ssh_user=root
 deployment_type=origin
-openshift_master_default_subdomain=apps.console.techdope.io
+openshift_master_default_subdomain=apps.openshift.example.io
 
 # If ansible_ssh_user is not root, ansible_become must be set to true
 #ansible_become=true
@@ -19,13 +19,13 @@ openshift_master_default_subdomain=apps.console.techdope.io
 # uncomment the following to enable htpasswd authentication; defaults to DenyAllPasswordIdentityProvider
 openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
 containerized=true
-openshift_release=v1.4
-openshift_image_tag=v1.4.0
+openshift_release=v1.5
+openshift_image_tag=v1.5.0
 
 # host group for masters
 [masters]
-console.techdope.io
+openshift.example.io openshift_schedulable=true 
 
 # host group for nodes, includes region info
 [nodes]
-console.techdope.io openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true 
+openshift.example.io openshift_node_labels="{'region': 'infra', 'zone': 'default'}" openshift_schedulable=true 
