@@ -1,0 +1,49 @@
+#create an OSEv3 group that contains the master, nodes, etcd, and lb groups.
+# The lb group lets Ansible configure HAProxy as the load balancing solution.
+# Comment lb out if your load balancer is pre-configured.
+[OSEv3:children]
+masters
+nodes
+etcd
+# Uncomment the following for Load Balancing Option 2
+#lb
+
+# Set variables common for all OSEv3 hosts
+[OSEv3:vars]
+ansible_ssh_user=root
+deployment_type=origin
+
+
+# Uncomment the following to enable htpasswd authentication; defaults to
+# DenyAllPasswordIdentityProvider.
+openshift_master_identity_providers=[{'name': 'htpasswd_auth', 'login': 'true', 'challenge': 'true', 'kind': 'HTPasswdPasswordIdentityProvider', 'filename': '/etc/origin/master/htpasswd'}]
+
+# Native high availbility cluster method with optional load balancer.
+# If no lb group is defined installer assumes that a load balancer has
+# been preconfigured. For installation the value of
+# openshift_master_cluster_hostname must resolve to the load balancer
+# or to one or all of the masters defined in the inventory if no load
+# balancer is present.
+openshift_release=v1.5
+openshift_image_tag=v1.5.0
+
+
+# host group for masters
+[masters]
+master.example.io
+
+# host group for etcd
+[etcd]
+etcd.example.io
+
+# Specify load balancer host
+# Uncomment these two lines if you didn't integrate with an external LB
+#[lb]
+#lb.example.com
+
+# host group for nodes, includes region info
+[nodes]
+master.example.io openshift_node_labels="{'region': 'masters', 'zone': 'default'}"
+etcd.example.io openshift_node_labels="{'region': 'infra', 'zone': 'default'}"
+node1.example.io openshift_node_labels="{'region': 'primary', 'zone': 'east'}"
+node2.example.io openshift_node_labels="{'region': 'primary', 'zone': 'west'}"
